@@ -17,18 +17,26 @@ const firebaseConfig = {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-  
+    
+      console.log(`Attempting to log in with email: ${email}`);
+    
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-  
+    
+            console.log('User signed in:', user.email);
+    
             // Get user token and check role
             user.getIdTokenResult().then(idTokenResult => {
-                // If admin, redirect to admin dashboard
+                console.log('Token claims:', idTokenResult.claims);  // Log the token claims for debugging
+  
+                // Check for admin role
                 if (idTokenResult.claims.admin) {
+                    console.log(`${user.email} is an admin. Redirecting to admin dashboard.`);
                     window.location.href = "/admin-dashboard.html";
                 } else {
-                    // Else redirect to worker dashboard
+                    // Default to worker dashboard
+                    console.log(`${user.email} is a worker. Redirecting to worker dashboard.`);
                     window.location.href = "/worker-dashboard.html";
                 }
             }).catch((error) => {
@@ -36,6 +44,7 @@ const firebaseConfig = {
             });
         })
         .catch((error) => {
+            console.error('Login failed:', error.message);
             document.getElementById('error-message').innerText = error.message;
         });
   });
