@@ -2,37 +2,13 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const reportRoutes = require('./routes/index');
-app.use('/api', reportRoutes);
+const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const serviceAccount = require('./path/to/your-firebase-adminsdk.json');
+const serviceAccount = require('./bartekbuilders-firebase-adminsdk-m03fz-38941493a7.json');
 
+// Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
-});
-
-admin.auth().setCustomUserClaims('zPOaBrfQNMS1Ku2CdQJGSM5xZBv1', { admin: true })
-  .then(() => {
-    console.log("Admin role assigned to the owner");
-  })
-  .catch((error) => {
-    console.error("Error assigning admin role:", error);
-});
-
-admin.auth().setCustomUserClaims('V7GEmN9WWPdWNZF09JS1HSBRWRf2', { role: 'worker' })
-  .then(() => {
-    console.log("Admin role assigned to the owner");
-  })
-  .catch((error) => {
-    console.error("Error assigning admin role:", error);
-});
-
-admin.auth().setCustomUserClaims('JuXxtR0PYWexP5IJONSWjFy00LG3', { role: 'worker' })
-  .then(() => {
-    console.log("Admin role assigned to the owner");
-  })
-  .catch((error) => {
-    console.error("Error assigning admin role:", error);
 });
 
 // Create the Express app
@@ -52,4 +28,22 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+
+// Use this code only when assigning roles (do not use it in production)
+admin.auth().setCustomUserClaims('USER_ID_FOR_ADMIN', { admin: true })
+  .then(() => {
+    console.log("Admin role assigned to the owner");
+  })
+  .catch((error) => {
+    console.error("Error assigning admin role:", error);
+});
+
+// Set worker roles similarly when needed (use this once, not on every app start)
+admin.auth().setCustomUserClaims('USER_ID_FOR_WORKER', { role: 'worker' })
+  .then(() => {
+    console.log("Worker role assigned");
+  })
+  .catch((error) => {
+    console.error("Error assigning worker role:", error);
 });
