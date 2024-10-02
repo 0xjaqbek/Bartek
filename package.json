@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint .",
     "start": "node app.js",
     "build": "echo 'No build step defined' && exit 0"
   },
